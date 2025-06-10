@@ -1,0 +1,29 @@
+# configuration for sack templates
+# usage -
+# template_id:
+#   name: "Seed Pouch"
+#   material: PAPER
+#   lore:
+#     - "Bag"
+#     - ""
+#     - "-=-=-=-=-"
+#     - ""
+#     - "A small pouch made for botanists."
+#   rows: 1 # may be 1 - 6
+#   blocked-slots: [0,1,7,8] #list of blocked slots
+#   mask:
+#     mmotype: SEEDS # also accepts "material: dead_bush" or "none"
+
+straw_basket:
+  rows: 1
+  material: WHEAT
+  name: "<#aa77ff>Straw Basket"
+  lore:
+    - "<#ddaaff>Bag"
+    - ""
+    - "<#aa55ff>-=-=-=-=-"
+    - ""
+    - "<#ddaaff>A quaint little basket for a picnic."
+  blocked-slots: [0,1,7,8]
+  mask:
+    mmotype: SNACK

@@ -1,0 +1,9 @@
+name: RejuvenationSacks
+version: '0.0.1'
+main: com.alicedev.rejuvenationSacks.RejuvenationSacks
+api-version: '1.21'
+commands:
+  prsacks:
+    description: RejuvenationSacks main command.
+    usage: /prsacks <reload>
+    permission: rejuvenationsacks.reload
