@@ -1,5 +1,6 @@
 package com.alicedev.rejuvenationSacks;
 
+import com.alicedev.rejuvenationSacks.commands.GenerateSackCommand;
 import com.alicedev.rejuvenationSacks.commands.ReloadPluginCommand;
 import com.alicedev.rejuvenationSacks.data.PluginConfigManager;
 import com.alicedev.rejuvenationSacks.data.SackDataManager;
@@ -20,7 +21,6 @@ public final class RejuvenationSacks extends JavaPlugin {
 
 
     //TODO: onDisable function to close safely
-    //TODO: Command to give a player a sack
 
 
     /**
@@ -56,6 +56,7 @@ public final class RejuvenationSacks extends JavaPlugin {
      */
     private void registerCommands() {
         getCommand("prsacks").setExecutor(new ReloadPluginCommand(plugin));
+        getCommand("gensack").setExecutor(new GenerateSackCommand(plugin));
     }
 
     /**

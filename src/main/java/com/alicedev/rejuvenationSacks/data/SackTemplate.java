@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -54,14 +55,29 @@ public class SackTemplate {
         this.material = material;
     }
 
+    /**
+     * Build template into an ItemStack
+     */
     public static ItemStack createSack(JavaPlugin plugin, SackTemplate template) {
+        // initialize and get bindings to new ItemStack
         ItemStack sack = new ItemStack(template.material);
         ItemMeta meta = sack.getItemMeta();
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+
+        // set sack instance UUID
+        NamespacedKey uuid_key = new NamespacedKey(plugin, "sack_id");
         UUID uuid = UUID.randomUUID();
-        NamespacedKey key = new NamespacedKey(plugin, "sack_id");
-        meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, uuid.toString());
+        pdc.set(uuid_key, PersistentDataType.STRING, uuid.toString());
+
+        // set sack template reference
+        NamespacedKey template_key = new NamespacedKey(plugin, "sack_template");
+        pdc.set(template_key, PersistentDataType.STRING, template.identifier.toUpperCase());
+
+        // set display metas
         meta.itemName(template.display_name);
         meta.lore(template.display_lore);
+
+        // apply meta
         sack.setItemMeta(meta);
         return sack;
     }

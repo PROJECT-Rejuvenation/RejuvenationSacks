@@ -7,3 +7,7 @@ commands:
     description: RejuvenationSacks main command.
     usage: /prsacks <reload>
     permission: rejuvenationsacks.reload
+  gensack:
+    description: Generates a new Sack and sends it to the target player (or self if none).
+    usage: /gensack <template_id> [target_player]
+    permission: rejuvenationsacks.generate

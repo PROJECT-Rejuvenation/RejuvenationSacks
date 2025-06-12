@@ -51,18 +51,6 @@ public class SackEventListener implements Listener {
 
     @EventHandler
     public void onRightClick(PlayerInteractEvent event) {
-        if(event.getItem() != null && event.getItem().getType() == Material.STICK) {
-            Player player = event.getPlayer();
-            SackTemplate template = null;
-            try {
-                template = sackData.loadFromConfig("straw_basket");
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            player.give(SackTemplate.createSack(plugin,template));
-            return;
-        }
-
         if (event.getItem() == null) return;
         ItemStack item = event.getItem();
         ItemMeta meta = item.getItemMeta();
