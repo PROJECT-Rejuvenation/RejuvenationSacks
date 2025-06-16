@@ -35,6 +35,10 @@ public class SackTemplate {
         this.rows = rows;
     }
 
+    public int getRows() {
+        return rows;
+    }
+
     public void setDisplay_name(Component display_name) {
         this.display_name = display_name;
     }
@@ -45,6 +49,10 @@ public class SackTemplate {
 
     public void setBlocked_slots(Integer[] blocked_slots) {
         this.blocked_slots = blocked_slots;
+    }
+
+    public Integer[] getBlocked_slots() {
+        return blocked_slots;
     }
 
     public void setMask(String mask) {
@@ -71,7 +79,7 @@ public class SackTemplate {
 
         // set sack template reference
         NamespacedKey template_key = new NamespacedKey(plugin, "sack_template");
-        pdc.set(template_key, PersistentDataType.STRING, template.identifier.toUpperCase());
+        pdc.set(template_key, PersistentDataType.STRING, template.identifier);
 
         // set display metas
         meta.itemName(template.display_name);
@@ -80,5 +88,15 @@ public class SackTemplate {
         // apply meta
         sack.setItemMeta(meta);
         return sack;
+    }
+
+    public static boolean itemIsSack(JavaPlugin plugin, ItemStack itemStack) {
+        if (itemStack == null) return false;
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta == null) return false;
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+
+        NamespacedKey template_key = new NamespacedKey(plugin, "sack_template");
+        return pdc.has(template_key, PersistentDataType.STRING);
     }
 }

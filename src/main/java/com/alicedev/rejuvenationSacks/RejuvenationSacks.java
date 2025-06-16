@@ -4,10 +4,13 @@ import com.alicedev.rejuvenationSacks.commands.GenerateSackCommand;
 import com.alicedev.rejuvenationSacks.commands.ReloadPluginCommand;
 import com.alicedev.rejuvenationSacks.data.PluginConfigManager;
 import com.alicedev.rejuvenationSacks.data.SackDataManager;
+import com.alicedev.rejuvenationSacks.data.SackInventory;
 import com.alicedev.rejuvenationSacks.events.SackEventListener;
 import org.bukkit.event.HandlerList;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,10 +20,10 @@ public final class RejuvenationSacks extends JavaPlugin {
     private PluginConfigManager configManager;
     private SackDataManager sackDataManager;
     private RejuvenationSacks plugin = this;
+    public Map<UUID, ItemStack[]> sackContents = new HashMap<>();
+    public Set<SackInventory> openInventories = new HashSet<>();
     Boolean initialized = true;
 
-
-    //TODO: onDisable function to close safely
 
 
     /**
@@ -32,6 +35,18 @@ public final class RejuvenationSacks extends JavaPlugin {
     public void onEnable() {
         loadPlugin();
         logInfo("RejuvenationSacks enabled.");
+    }
+
+
+    /**
+     * onDisable:
+     * runs on plugin disable.
+     * safely terminates components.
+     */
+    @Override
+    public void onDisable() {
+        safeCloseSacks();
+        logInfo("RejuvenationSacks disabled.");
     }
 
     /**
@@ -79,6 +94,19 @@ public final class RejuvenationSacks extends JavaPlugin {
         registerCommands();
 
         if(!getDataFolder().exists()) getDataFolder().mkdir();
+    }
+
+    /**
+     * safeCloseSacks
+     * closes and saves all open sack inventories safely
+     */
+    public void safeCloseSacks() {
+        openInventories.forEach(sackInv -> {
+            sackInv.getInventory().close();
+            UUID uuid = sackInv.getUuid();
+            ItemStack[] contents = sackInv.getInventory().getContents();
+            sackDataManager.saveInventory(uuid, contents);
+        });
     }
 
     /**
