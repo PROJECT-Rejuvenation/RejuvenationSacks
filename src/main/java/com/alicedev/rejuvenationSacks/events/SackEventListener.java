@@ -89,10 +89,7 @@ public class SackEventListener implements Listener {
         if (!SackTemplate.itemIsSack(plugin,item)) return;
 
         // UUID the item if it has none (dummy item)
-        if (!SackTemplate.sackHasUUID(plugin,item)) {
-            item = SackTemplate.uuidSack(plugin,item);
-            player.getInventory().setItemInMainHand(item);
-        }
+        if (!SackTemplate.sackHasUUID(plugin,item)) SackTemplate.uuidSack(plugin,item);
 
         // get the rest of item data
         ItemMeta meta = item.getItemMeta();
