@@ -43,21 +43,24 @@ public class SackEventListener implements Listener {
         templateKey = new NamespacedKey(plugin, "sack_template");
     }
 
-
-
-    @EventHandler
-    public void onRightClick(PlayerInteractEvent event) throws Exception {
+    /*public void onRightClick(PlayerInteractEvent event) throws Exception {
         if (event.getItem() == null || event.getAction().isLeftClick()) return;
         ItemStack item = event.getItem();
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
-        if (!container.has(sackKey, PersistentDataType.STRING)) return;
+        if (!container.has(templateKey, PersistentDataType.STRING)) return;
+
+        //TODO: generate UUID on first use (give item without UUID, if right clicked and no UUID is found, generate one and open)
 
         event.setCancelled(true);
 
-        UUID uuid = UUID.fromString(container.get(sackKey, PersistentDataType.STRING));
+        UUID uuid = null;
+        if (container.has(sackKey, PersistentDataType.STRING)) uuid = UUID.fromString(container.get(sackKey, PersistentDataType.STRING));
+        else uuid = UUID.randomUUID();
+        container.set(sackKey, PersistentDataType.STRING, uuid.toString());
+
         String template_id = container.get(templateKey,PersistentDataType.STRING);
 
         Player player = event.getPlayer();
@@ -72,6 +75,41 @@ public class SackEventListener implements Listener {
             inv.setContents(sackData.loadInventory(uuid));
         }
 
+        player.openInventory(inv);
+        plugin.openInventories.add(invHolder);
+        invHolder.populate_blockers();
+    }*/
+    @EventHandler
+    public void onRightClick(PlayerInteractEvent event) throws Exception {
+        if (event.getItem() == null || event.getAction().isLeftClick()) return;
+
+        // we dont care unless item is a sack
+        Player player = event.getPlayer();
+        ItemStack item = event.getItem();
+        if (!SackTemplate.itemIsSack(plugin,item)) return;
+
+        // UUID the item if it has none (dummy item)
+        if (!SackTemplate.sackHasUUID(plugin,item)) {
+            item = SackTemplate.uuidSack(plugin,item);
+            player.getInventory().setItemInMainHand(item);
+        }
+
+        // get the rest of item data
+        ItemMeta meta = item.getItemMeta();
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+        String template_id = pdc.get(templateKey,PersistentDataType.STRING);
+        UUID uuid = UUID.fromString(pdc.get(sackKey,PersistentDataType.STRING));
+
+        // prepare inventory
+        SackTemplate template = sackData.loadFromConfig(template_id);
+        SackInventory invHolder = new SackInventory(template,uuid);
+        Inventory inv = invHolder.getInventory();
+
+        // loading contents from memory or from disk
+        if (plugin.sackContents.containsKey(uuid)) inv.setContents(plugin.sackContents.get(uuid));
+        else inv.setContents(sackData.loadInventory(uuid));
+
+        // opening inventory
         player.openInventory(inv);
         plugin.openInventories.add(invHolder);
         invHolder.populate_blockers();

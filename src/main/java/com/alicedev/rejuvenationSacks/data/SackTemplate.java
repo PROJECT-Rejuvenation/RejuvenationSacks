@@ -80,9 +80,9 @@ public class SackTemplate {
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
 
         // set sack instance UUID
-        NamespacedKey uuid_key = new NamespacedKey(plugin, "sack_id");
-        UUID uuid = UUID.randomUUID();
-        pdc.set(uuid_key, PersistentDataType.STRING, uuid.toString());
+        //NamespacedKey uuid_key = new NamespacedKey(plugin, "sack_id");
+        //UUID uuid = UUID.randomUUID();
+        //pdc.set(uuid_key, PersistentDataType.STRING, uuid.toString());
 
         // set sack template reference
         NamespacedKey template_key = new NamespacedKey(plugin, "sack_template");
@@ -92,9 +92,33 @@ public class SackTemplate {
         meta.itemName(template.display_name);
         meta.lore(template.display_lore);
 
+        // set max stack size to 1 to avoid conflicts when UUID'ing
+        meta.setMaxStackSize(1);
+
         // apply meta
         sack.setItemMeta(meta);
         return sack;
+    }
+
+    /**
+     * identifySack:
+     * generates and applies a UUID to the given
+     * ItemStack, if it is a sack.
+     *
+     * @return the UUID'd ItemStack
+     */
+    public static ItemStack uuidSack(JavaPlugin plugin, ItemStack itemStack) throws Exception {
+        if (!itemIsSack(plugin,itemStack)) throw new Exception("ItemStack to UUID is not a valid sack!");
+
+        ItemMeta meta = itemStack.getItemMeta();
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+
+        NamespacedKey uuid_key = new NamespacedKey(plugin, "sack_id");
+        UUID uuid = UUID.randomUUID();
+        pdc.set(uuid_key, PersistentDataType.STRING, uuid.toString());
+
+        itemStack.setItemMeta(meta);
+        return itemStack;
     }
 
     public static boolean itemIsSack(JavaPlugin plugin, ItemStack itemStack) {
@@ -105,5 +129,14 @@ public class SackTemplate {
 
         NamespacedKey template_key = new NamespacedKey(plugin, "sack_template");
         return pdc.has(template_key, PersistentDataType.STRING);
+    }
+
+    public static boolean sackHasUUID(JavaPlugin plugin, ItemStack itemStack) {
+        if (!itemIsSack(plugin, itemStack)) return false;
+        ItemMeta meta = itemStack.getItemMeta();
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+
+        NamespacedKey uuid_key = new NamespacedKey(plugin, "sack_id");
+        return pdc.has(uuid_key, PersistentDataType.STRING);
     }
 }
