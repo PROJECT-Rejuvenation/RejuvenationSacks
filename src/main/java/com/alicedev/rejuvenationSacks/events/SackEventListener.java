@@ -27,7 +27,9 @@ public class SackEventListener implements Listener {
     private NamespacedKey sackKey;
     private NamespacedKey templateKey;
 
-    //TODO: Listener for type masks (and a config option to abstain from them)
+    //TODO: Separate listener for type masks into multiple handlers (mmotype,mythic,vanilla)
+    //TODO: disable mask checking if the template's mask section is null
+    //TODO: add a config option to invert a mask
     //TODO: Add UUID to sack item on first open, instead of on creation
 
     /**

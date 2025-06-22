@@ -6,7 +6,7 @@
 
     <groupId>com.alicedev</groupId>
     <artifactId>RejuvenationSacks</artifactId>
-    <version>0.0.1</version>
+    <version>0.3.2</version>
     <packaging>jar</packaging>
 
     <name>RejuvenationSacks</name>
