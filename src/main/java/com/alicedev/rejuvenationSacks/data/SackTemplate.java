@@ -21,11 +21,14 @@ public class SackTemplate {
     private Component display_name; // Uses MiniMessage.miniMessage().deserialize("<#225511>Colors :D");
     private List<Component> display_lore;
     private Integer[] blocked_slots;
-    private String mask;
+    private List<String> mask;
 
     /**
      * SackTemplate:
-     * parses config templates
+     * holder for the template defined in config.
+     * <p>constructed in {@link SackDataManager}
+     *
+     * @see SackDataManager#loadFromConfig(String)
      */
     public SackTemplate(String identifier) {
         this.identifier = identifier;
@@ -55,8 +58,12 @@ public class SackTemplate {
         return blocked_slots;
     }
 
-    public void setMask(String mask) {
+    public void setMask(List<String> mask) {
         this.mask = mask;
+    }
+
+    public List<String> getMask() {
+        return mask;
     }
 
     public void setMaterial(Material material) {

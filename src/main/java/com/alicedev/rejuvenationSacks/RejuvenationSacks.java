@@ -10,6 +10,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,6 +21,7 @@ public final class RejuvenationSacks extends JavaPlugin {
     private PluginConfigManager configManager;
     private SackDataManager sackDataManager;
     private RejuvenationSacks plugin = this;
+    private File instances_dir;
     public Map<UUID, ItemStack[]> sackContents = new HashMap<>();
     public Set<SackInventory> openInventories = new HashSet<>();
     Boolean initialized = true;
@@ -62,6 +64,10 @@ public final class RejuvenationSacks extends JavaPlugin {
      * loads config manager.
      */
     private void loadPluginConfigs() {
+        if(!getDataFolder().exists()) getDataFolder().mkdir();
+        instances_dir = new File(getDataFolder().getAbsolutePath() + "/instances");
+        if(!instances_dir.exists()) instances_dir.mkdir();
+
         configManager = new PluginConfigManager(this);
     }
 
@@ -123,6 +129,14 @@ public final class RejuvenationSacks extends JavaPlugin {
      */
     public PluginConfigManager getPluginConfigManager() {
         return configManager;
+    }
+
+    /**
+     * getInstances_dir:
+     * getter for sack instances directory.
+     */
+    public File getInstances_dir() {
+        return instances_dir;
     }
 
     /**

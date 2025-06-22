@@ -24,7 +24,7 @@ public class SackDataManager {
     }
 
     public SackTemplate loadFromConfig(String id) throws Exception {
-        plugin.logInfo("Loading sack template: " + id);
+        //plugin.logInfo("Loading sack template: " + id);
 
         ConfigurationSection section = configManager.getTemplatesConfig().getConfigurationSection(id);
         if (section == null) {
@@ -42,13 +42,13 @@ public class SackDataManager {
         template.setDisplay_lore(lorelines);
         List<Integer> blots = (List<Integer>) section.getList("blocked-slots");
         template.setBlocked_slots(blots.toArray(new Integer[0]));
-        template.setMask(section.getConfigurationSection("mask").getString("mmotypes"));
+        template.setMask(section.getConfigurationSection("mask").getStringList("mmotype"));
 
         return template;
     }
 
     public void saveInventory(UUID uuid, ItemStack[] contents) {
-        File file = new File(plugin.getDataFolder(), uuid + ".yml");
+        File file = new File(plugin.getInstances_dir(), uuid + ".yml");
         YamlConfiguration config = new YamlConfiguration();
 
         for (int i = 0; i < contents.length; i++) {
@@ -64,7 +64,7 @@ public class SackDataManager {
     }
 
     public ItemStack[] loadInventory(UUID uuid) {
-        File file = new File(plugin.getDataFolder(), uuid + ".yml");
+        File file = new File(plugin.getInstances_dir(), uuid + ".yml");
         if (!file.exists()) return new ItemStack[9];
 
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);

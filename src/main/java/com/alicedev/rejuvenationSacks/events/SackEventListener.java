@@ -1,15 +1,12 @@
 package com.alicedev.rejuvenationSacks.events;
 
 import com.alicedev.rejuvenationSacks.RejuvenationSacks;
-import com.alicedev.rejuvenationSacks.data.PluginConfigManager;
 import com.alicedev.rejuvenationSacks.data.SackDataManager;
 import com.alicedev.rejuvenationSacks.data.SackInventory;
 import com.alicedev.rejuvenationSacks.data.SackTemplate;
-import com.alicedev.rejuvenationSacks.utils.MiniMessageUtils;
-import org.bukkit.Bukkit;
+import com.alicedev.rejuvenationSacks.utils.compatibility.MMOItemsCompat;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,7 +34,7 @@ public class SackEventListener implements Listener {
      * SackEventListener:
      * constructor, used to initialise plugin startup data.
      *
-     * @param plugin - instance of main plugin class.
+     * @param plugin instance of main plugin class.
      */
     public SackEventListener(RejuvenationSacks plugin) {
         this.plugin = plugin;
@@ -81,11 +78,11 @@ public class SackEventListener implements Listener {
     }
 
     /**
-     * onInventoryClose
+     * onInventoryClose:
      * inventory close event handler
-     * saves sack contents to file and memory when closing a sack
+     * <p>saves sack contents to file and memory when closing a sack
      *
-     * @param e
+     * @param e InventoryCloseEvent
      */
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent e) {
@@ -102,27 +99,40 @@ public class SackEventListener implements Listener {
     }
 
     /**
-     * onInventoryInteract
+     * onInventoryInteract:
      * inventory click event handler
-     * checks for and cancels events whilst a sack inventory is open where:
-     * - Sack is clicked
-     * - Blocked slot ({@link SackTemplate}) is clicked
+     * <p>checks for and cancels events whilst a sack inventory is open where:
+     * <p>- Sack is clicked
+     * <p>- Blocked slot ({@link SackTemplate}) is clicked
+     * <p>- Item that does not match mask is clicked (if masks are enabled)
      *
      * @param e InventoryClickEvent
      */
+    //TODO: separate this event listener method into exclusive methods for each type of restriction (mmotype,vanilla,etc)
     @EventHandler
-    public void onInventoryInteract(InventoryClickEvent e){
+    public void onInventoryInteract(InventoryClickEvent e) throws Exception {
         InventoryHolder topInv = e.getView().getTopInventory().getHolder();
-        if (!(topInv instanceof SackInventory)) return;
+        Inventory clickedInv = e.getClickedInventory();
+        if (!(topInv instanceof SackInventory) || clickedInv == null) return;
 
-        ItemStack target = e.getClickedInventory().getItem(e.getSlot());
+        SackInventory sackInv = (SackInventory) topInv;
+        SackTemplate template = sackInv.getTemplate();
+        List<String> mask = template.getMask();
+
+        ItemStack target = clickedInv.getItem(e.getSlot());
         // Captures meta here in case of inverse hot-swapping of the blocker item.
         ItemMeta target_meta = target != null ? target.getItemMeta() : new ItemStack(Material.STONE).getItemMeta();
         if(e.getClick().isKeyboardClick()) target = e.getView().getBottomInventory().getItem(e.getHotbarButton());
 
+        if(target == null) return;
+
+        // cancel if any of these match
         boolean is_blocker = target_meta.isHideTooltip();
         boolean is_sack = SackTemplate.itemIsSack(plugin,target);
+        boolean matches_mask = false;
+        if (MMOItemsCompat.isMMOItem(target))
+            matches_mask = mask.contains(MMOItemsCompat.getMMOItemType(target).toUpperCase());
 
-        e.setCancelled(is_sack || is_blocker);
+        e.setCancelled(is_sack || is_blocker || !(matches_mask));
     }
 }
