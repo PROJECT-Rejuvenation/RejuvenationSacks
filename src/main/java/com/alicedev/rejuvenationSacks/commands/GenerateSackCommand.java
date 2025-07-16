@@ -71,7 +71,11 @@ public class GenerateSackCommand implements CommandExecutor {
             commandFeedback(sender, "<#aaffbb>Template identifier not found.");
             return true;
         }
-        target.give(SackTemplate.createSack(plugin,template));
+        try {
+            target.give(SackTemplate.createSack(plugin,template));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         commandFeedback(sender, "<#aaffbb>Sack generated successfully.");
         return true;

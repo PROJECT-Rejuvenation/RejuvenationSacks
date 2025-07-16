@@ -48,6 +48,8 @@ public class SackDataManager {
         else if(section.getConfigurationSection("mask").getConfigurationSection("mmotype") == null) template.setMask(new ArrayList<>());
         else template.setMask(section.getConfigurationSection("mask").getStringList("mmotype"));
 
+        if(section.getString("skull-texture") != null) template.setHeadTexture(section.getString("skull-texture"));
+
         return template;
     }
 
@@ -81,4 +83,14 @@ public class SackDataManager {
         return contents;
     }
 
+    public static String extractTextureURL(String str) {
+        String URL_PREFIX = "\"url\":\"";
+        String URL_SUFFIX = "\"";
+
+        int start = str.indexOf(URL_PREFIX);
+        start += URL_PREFIX.length();
+        final int end = str.indexOf(URL_SUFFIX, start);
+        return str.substring(start, end);
+
+    }
 }

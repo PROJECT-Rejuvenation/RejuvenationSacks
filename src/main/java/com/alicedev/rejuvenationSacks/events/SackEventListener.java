@@ -90,6 +90,9 @@ public class SackEventListener implements Listener {
         ItemStack item = event.getItem();
         if (!SackTemplate.itemIsSack(plugin,item)) return;
 
+        // cancel in case it's a block
+        event.setCancelled(true);
+
         // UUID the item if it has none (dummy item)
         if (!SackTemplate.sackHasUUID(plugin,item)) SackTemplate.uuidSack(plugin,item);
 
