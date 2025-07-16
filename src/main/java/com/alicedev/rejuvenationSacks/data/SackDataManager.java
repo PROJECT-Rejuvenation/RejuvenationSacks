@@ -4,6 +4,7 @@ import com.alicedev.rejuvenationSacks.RejuvenationSacks;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -42,7 +43,10 @@ public class SackDataManager {
         template.setDisplay_lore(lorelines);
         List<Integer> blots = (List<Integer>) section.getList("blocked-slots");
         template.setBlocked_slots(blots.toArray(new Integer[0]));
-        template.setMask(section.getConfigurationSection("mask").getStringList("mmotype"));
+
+        if(section.getConfigurationSection("mask") == null) template.setMask(new ArrayList<>());
+        else if(section.getConfigurationSection("mask").getConfigurationSection("mmotype") == null) template.setMask(new ArrayList<>());
+        else template.setMask(section.getConfigurationSection("mask").getStringList("mmotype"));
 
         return template;
     }

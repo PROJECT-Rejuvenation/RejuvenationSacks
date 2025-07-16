@@ -1,6 +1,5 @@
 package com.alicedev.rejuvenationSacks.data;
 
-import com.alicedev.rejuvenationSacks.RejuvenationSacks;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -10,7 +9,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
 import java.util.List;
 import java.util.UUID;
 

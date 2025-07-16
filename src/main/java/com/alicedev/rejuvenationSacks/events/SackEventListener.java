@@ -169,6 +169,7 @@ public class SackEventListener implements Listener {
         boolean matches_mask = false;
         if (MMOItemsCompat.isMMOItem(target))
             matches_mask = mask.contains(MMOItemsCompat.getMMOItemType(target).toUpperCase());
+        if(mask.isEmpty()) matches_mask = true;
 
         e.setCancelled(is_sack || is_blocker || !(matches_mask));
     }
