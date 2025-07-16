@@ -2,8 +2,6 @@ package com.alicedev.rejuvenationSacks.commands;
 
 import com.alicedev.rejuvenationSacks.RejuvenationSacks;
 import com.alicedev.rejuvenationSacks.utils.MiniMessageUtils;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -42,7 +40,8 @@ public class ReloadPluginCommand implements CommandExecutor {
             return true;
         }
 
-        if (args.length != 1 || !args[0].equalsIgnoreCase("reload")) {
+        boolean is_reload = (args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("re"));
+        if (args.length != 1 || !is_reload) {
             commandFeedback(sender, "<#ff7744>Usage: /prsacks reload");
             return true;
         }

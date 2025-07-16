@@ -2,6 +2,8 @@ package com.alicedev.rejuvenationSacks;
 
 import com.alicedev.rejuvenationSacks.commands.GenerateSackCommand;
 import com.alicedev.rejuvenationSacks.commands.ReloadPluginCommand;
+import com.alicedev.rejuvenationSacks.commands.completions.GenerateSackCompletions;
+import com.alicedev.rejuvenationSacks.commands.completions.ReloadPluginCompletions;
 import com.alicedev.rejuvenationSacks.data.PluginConfigManager;
 import com.alicedev.rejuvenationSacks.data.SackDataManager;
 import com.alicedev.rejuvenationSacks.data.SackInventory;
@@ -77,7 +79,9 @@ public final class RejuvenationSacks extends JavaPlugin {
      */
     private void registerCommands() {
         getCommand("prsacks").setExecutor(new ReloadPluginCommand(plugin));
+        getCommand("prsacks").setTabCompleter(new ReloadPluginCompletions());
         getCommand("gensack").setExecutor(new GenerateSackCommand(plugin));
+        getCommand("gensack").setTabCompleter(new GenerateSackCompletions(configManager.getTemplateIDs()));
     }
 
     /**
